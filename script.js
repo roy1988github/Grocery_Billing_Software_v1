@@ -148,6 +148,11 @@ class ShoppingCart {
                 this.closeModal();
             }
         });
+
+        // Listen for changes to Final Discount input
+        document.getElementById('final-discount-input').addEventListener('input', () => {
+            this.updateTotal();
+        });
     }
 
     addFirstItem() {
@@ -397,6 +402,12 @@ class ShoppingCart {
             total += finalPrice;
         });
         document.getElementById('total-amount').textContent = `₹${total.toFixed(2)}`;
+        // Update Final Amount based on Final Discount
+        const finalDiscountInput = document.getElementById('final-discount-input');
+        const finalAmountValue = document.getElementById('final-amount-value');
+        let finalDiscount = parseFloat(finalDiscountInput.value) || 0;
+        let finalAmount = total * (1 - finalDiscount / 100);
+        finalAmountValue.textContent = `₹${finalAmount.toFixed(2)}`;
     }
 
     checkout() {
@@ -457,11 +468,15 @@ class ShoppingCart {
             alert('No checkout data available.');
             return;
         }
-
-        this.createPDFBill(this.currentCheckout.validItems, this.currentCheckout.total);
+        // Get latest final discount and final amount
+        const finalDiscountInput = document.getElementById('final-discount-input');
+        let finalDiscount = parseFloat(finalDiscountInput.value) || 0;
+        let total = this.currentCheckout.total;
+        let finalAmount = total * (1 - finalDiscount / 100);
+        this.createPDFBill(this.currentCheckout.validItems, total, finalDiscount, finalAmount);
     }
 
-    createPDFBill(validItems, total) {
+    createPDFBill(validItems, total, finalDiscount, finalAmount) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         // Bill header with improved style
@@ -549,8 +564,16 @@ class ShoppingCart {
         doc.setFontSize(14);
         doc.setTextColor(0, 100, 0); // Deep green
         doc.text('TOTAL AMOUNT: Rs. ' + total.toFixed(2), 105, totalY + 8, { align: 'center' });
+        doc.setFont('times', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(255, 87, 34); // Orange for final discount
+        doc.text('Final Discount: ' + finalDiscount.toFixed(2) + '%', 105, totalY + 18, { align: 'center' });
+        doc.setFont('times', 'bold');
+        doc.setFontSize(20); // Increased size for final amount
+        doc.setTextColor(255, 87, 34); // Orange for final amount
+        doc.text('Final Amount to be Paid: Rs. ' + finalAmount.toFixed(2), 105, totalY + 38, { align: 'center' });
         doc.setTextColor(0, 0, 0); // Reset to black for footer
-        const footerY = totalY + 28;
+        const footerY = totalY + 60; // Increased vertical gap before footer
         doc.setFont('times', 'normal');
         doc.setFontSize(8);
         doc.text('Thank you for shopping with Kalimata Grocery!', 105, footerY, { align: 'center' });

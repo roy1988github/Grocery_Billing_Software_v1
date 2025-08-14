@@ -201,17 +201,44 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.5em;
+    font-size: 1em; /* Reduced to 2x original (2.5em / 2) */
     font-weight: bold;
     color: #333;
-    padding: 15px;
+    padding: 8px;
     background: #f8f9fa;
     border-radius: 8px;
 }
 
 .total-value {
     color: #4CAF50;
-    font-size: 1.2em;
+    font-size: 1em; /* Reduced to 2x original (2.5em / 2) */
+}
+
+.final-discount-section {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.final-discount-label {
+    font-size: 0.9em;
+    margin-right: 8px;
+}
+
+.final-discount-input {
+    padding: 6px;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    font-size: 0.9em;
+    width: 70px;
+    text-align: right;
+}
+
+.final-amount-row {
+    font-size: 2.7em; /* Increased to 3x previous (0.9em * 3) */
+    font-weight: bold;
+    color: #006400;
+    margin-top: 8px;
+    text-align: center;
 }
 
 .checkout-section {
