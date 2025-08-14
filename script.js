@@ -465,7 +465,7 @@ class ShoppingCart {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         // Bill header with improved style
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('times', 'bold');
         doc.setFontSize(28);
         doc.setTextColor(76, 175, 80);
         doc.text('KALIMATA GROCERY', 105, 25, { align: 'center' });
@@ -474,7 +474,7 @@ class ShoppingCart {
         doc.setTextColor(255, 87, 34);
         doc.text('_____________________________', 105, 30, { align: 'center' });
         doc.text('Fresh Products, Great Prices!', 105, 35, { align: 'center' });
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('times', 'normal');
         doc.setFontSize(12);
         doc.setTextColor(0, 0, 0);
         doc.text('Amra Kajan, Bisharpara- Nabajiban, North 24 Parganas - 700051', 105, 42, { align: 'center' });
@@ -482,25 +482,26 @@ class ShoppingCart {
         doc.line(20, 55, 190, 55);
         const currentDate = new Date();
         const billNumber = 'KG' + Date.now().toString().slice(-6);
+        doc.setFont('times', 'normal');
         doc.setFontSize(10);
         doc.text('Bill No: ' + billNumber, 20, 65);
         doc.text('Date: ' + currentDate.toLocaleDateString(), 20, 72);
         doc.text('Time: ' + currentDate.toLocaleTimeString(), 20, 79);
-        doc.setFont(undefined, 'bold');
+        doc.setFont('times', 'bold');
         const tableStartY = 90;
         // Adjusted X positions for better spacing
         const xPositions = {
             sno: 22,
-            product: 37,
-            qty: 80,
-            unit: 95,
-            rate: 110,
-            price: 130,
-            discount: 150,
-            final: 170
+            product: 38,
+            qty: 60,
+            unit: 75,
+            rate: 90,
+            price: 125, // further increased gap after Rate
+            discount: 145,
+            final: 165
         };
         doc.text('S.No', xPositions.sno, tableStartY);
-        doc.text('Product Name', xPositions.product, tableStartY);
+        doc.text('Product', xPositions.product, tableStartY);
         doc.text('Qty', xPositions.qty, tableStartY);
         doc.text('Unit', xPositions.unit, tableStartY);
         doc.text('Rate', xPositions.rate, tableStartY);
@@ -508,7 +509,7 @@ class ShoppingCart {
         doc.text('Discount', xPositions.discount, tableStartY);
         doc.text('Final Price', xPositions.final, tableStartY);
         doc.line(20, tableStartY + 3, 190, tableStartY + 3);
-        doc.setFont(undefined, 'normal');
+        doc.setFont('times', 'normal');
         let yPosition = tableStartY + 12;
         validItems.forEach((cartItem, index) => {
             let rate = cartItem.rate || 0;
@@ -531,20 +532,27 @@ class ShoppingCart {
             doc.text(productName, xPositions.product, yPosition, { maxWidth: xPositions.qty - xPositions.product - 2 });
             doc.text(cartItem.quantity.toString(), xPositions.qty, yPosition);
             doc.text(itemUnit, xPositions.unit, yPosition);
-            doc.text('₹' + rate.toFixed(2), xPositions.rate, yPosition);
-            doc.text('₹' + price.toFixed(2), xPositions.price, yPosition);
-            doc.text('₹' + finalPrice.toFixed(2), xPositions.final, yPosition);
+            let rateLabel = (itemUnit === 'kg' || itemUnit === 'gm') ? '/ Kg' : '/ L';
+            doc.setFont('times', 'normal');
+            doc.text('Rs. ' + rate.toFixed(2) + ' ' + rateLabel, xPositions.rate, yPosition);
+            doc.setFont('times', 'normal');
+            doc.text('Rs. ' + price.toFixed(2), xPositions.price, yPosition);
+            doc.setFont('times', 'normal');
+            doc.text((discount.toString() + '%'), xPositions.discount, yPosition); // ensure discount value is printed
+            doc.setFont('times', 'normal');
+            doc.text('Rs. ' + finalPrice.toFixed(2), xPositions.final, yPosition);
             yPosition += 8;
         });
         const totalY = yPosition + 10;
         doc.line(20, totalY - 5, 190, totalY - 5);
-        doc.setFont(undefined, 'bold');
+        doc.setFont('times', 'bold');
         doc.setFontSize(14);
-        // Move total to a separate centered line
-        doc.text('TOTAL AMOUNT: ₹' + total.toFixed(2), 105, totalY + 8, { align: 'center' });
+        doc.setTextColor(0, 100, 0); // Deep green
+        doc.text('TOTAL AMOUNT: Rs. ' + total.toFixed(2), 105, totalY + 8, { align: 'center' });
+        doc.setTextColor(0, 0, 0); // Reset to black for footer
         const footerY = totalY + 28;
+        doc.setFont('times', 'normal');
         doc.setFontSize(8);
-        doc.setFont(undefined, 'normal');
         doc.text('Thank you for shopping with Kalimata Grocery!', 105, footerY, { align: 'center' });
         doc.text('Visit us again for fresh products and great deals.', 105, footerY + 7, { align: 'center' });
         doc.text('Terms: All sales are final. Exchange only with receipt within 24 hours.', 105, footerY + 20, { align: 'center' });
