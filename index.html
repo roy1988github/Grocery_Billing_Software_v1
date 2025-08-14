@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalimata Grocery - Shopping Cart</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛒 Kalimata Grocery</h1>
+            <p>Fresh Products, Great Prices!</p>
+        </header>
+
+        <main>
+            <div class="shopping-cart">
+                <h2>Shopping Cart</h2>
+                
+                <div class="cart-header">
+                    <div class="header-item">Product</div>
+                    <div class="header-item">Quantity</div>
+                    <div class="header-item">Unit</div>
+                    <div class="header-item">Rate</div>
+                    <div class="header-item">Price</div>
+                    <div class="header-item">Discount</div>
+                    <div class="header-item">Discounted / Final Price</div>
+                    <div class="header-item">Action</div>
+                </div>
+
+                <div id="cart-items">
+                    <!-- Cart items will be dynamically added here -->
+                </div>
+
+                <div class="add-item-section">
+                    <button id="add-item-btn" class="add-btn">+ Add Item</button>
+                </div>
+
+                <div class="total-section">
+                    <div class="total-row">
+                        <span class="total-label">Total Amount:</span>
+                        <span id="total-amount" class="total-value">₹0.00</span>
+                    </div>
+                </div>
+
+                <div class="checkout-section">
+                    <button id="checkout-btn" class="checkout-btn">Proceed to Checkout</button>
+                    <button id="clear-cart-btn" class="clear-btn">Clear Cart</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🧾 Checkout Summary</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="checkout-summary"></div>
+                <div class="modal-total">
+                    <strong>Total Amount: <span id="modal-total">₹0.00</span></strong>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="generate-bill-btn" class="generate-bill-btn">📄 Generate Bill</button>
+                <button id="close-modal-btn" class="close-modal-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
